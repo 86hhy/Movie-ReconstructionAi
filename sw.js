@@ -1,4 +1,5 @@
-const CACHE_NAME = 'cinerecreate-shell-v1';
+const CACHE_PREFIX = 'cinerecreate-shell-';
+const CACHE_NAME = `${CACHE_PREFIX}v2`;
 const APP_SHELL = [
   './',
   './index.html',
@@ -6,38 +7,56 @@ const APP_SHELL = [
   './icons/icon-192.svg',
   './icons/icon-512.svg'
 ];
+const scopeUrl = new URL(self.registration.scope);
+const shellUrl = new URL('./index.html', scopeUrl).href;
 
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)));
-  self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(APP_SHELL.map(path => new URL(path, scopeUrl).href)))
+      .then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))))
+    caches.keys()
+      .then(keys => Promise.all(keys
+        .filter(key => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME)
+        .map(key => caches.delete(key))))
       .then(() => self.clients.claim())
   );
 });
 
 self.addEventListener('fetch', event => {
   const request = event.request;
-  if (request.method !== 'GET' || new URL(request.url).origin !== self.location.origin) return;
+  if (request.method !== 'GET' || request.headers.has('authorization')) return;
+
+  const url = new URL(request.url);
+  if (url.origin !== scopeUrl.origin || !url.href.startsWith(scopeUrl.href)) return;
+
   if (request.mode === 'navigate') {
-    event.respondWith(fetch(request).then(response => {
-      const copy = response.clone();
-      caches.open(CACHE_NAME).then(cache => cache.put('./index.html', copy));
-      return response;
-    }).catch(() => caches.match('./index.html')));
+    event.respondWith((async () => {
+      try {
+        return await fetch(request);
+      } catch {
+        return (await caches.match(shellUrl)) || Response.error();
+      }
+    })());
     return;
   }
-  event.respondWith(caches.match(request).then(cached => {
+
+  // Cache the local app shell and static resources only; never cache API responses.
+  if (!['script', 'style', 'image', 'font', 'manifest'].includes(request.destination)) return;
+  event.respondWith((async () => {
+    const cached = await caches.match(request);
     if (cached) return cached;
-    return fetch(request).then(response => {
-      if (response.ok) {
-        const copy = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
-      }
-      return response;
-    });
-  }));
+
+    const response = await fetch(request);
+    if (response.ok && response.type === 'basic') {
+      const copy = response.clone();
+      event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.put(request, copy)));
+    }
+    return response;
+  })());
 });
