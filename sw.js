@@ -1,6 +1,6 @@
 const CACHE_PREFIX = 'cinerecreate-shell-';
-const CACHE_NAME = `${CACHE_PREFIX}v5`;
-const SHELL_PATHS = ['./', './index.html', './studio.html', './video.html', './manifest.json', './icons/icon-192.svg', './icons/icon-512.svg'];
+const CACHE_NAME = `${CACHE_PREFIX}v6`;
+const SHELL_PATHS = ['./', './index.html', './studio.html', './video.html', './device-lab.html', './manifest.json', './icons/icon-192.svg', './icons/icon-512.svg'];
 const scopeUrl = new URL(self.registration.scope);
 const rootUrl = new URL('./', scopeUrl);
 const shellUrl = new URL('./video.html', scopeUrl).href;
@@ -44,8 +44,6 @@ self.addEventListener('fetch', event => {
     })());
     return;
   }
-
-  // API requests to a separately deployed host are never intercepted or cached.
   if (!['script', 'style', 'image', 'font', 'manifest'].includes(request.destination)) return;
   event.respondWith((async () => {
     const cached = await caches.match(request);
