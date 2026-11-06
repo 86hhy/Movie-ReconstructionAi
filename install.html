@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101018">
+  <meta name="description" content="Install CineRecreate AI on your Android phone.">
+  <link rel="manifest" href="./manifest.json">
+  <title>Install CineRecreate AI</title>
+  <style>
+    :root{color-scheme:dark;font:16px system-ui,sans-serif;background:#101018;color:#f7f5ff}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 60% -10%,#30214d,#101018 70%)}main{max-width:620px;margin:auto;padding:max(24px,env(safe-area-inset-top)) 20px max(30px,env(safe-area-inset-bottom))}h1{font-size:clamp(2.2rem,10vw,3.8rem);line-height:1.04;letter-spacing:-.05em;margin:28px 0 14px}p{color:#bcb8c9;line-height:1.65}.card{padding:20px;margin-top:18px;border:1px solid #ffffff20;border-radius:18px;background:#ffffff09}.button{display:flex;align-items:center;justify-content:center;min-height:54px;width:100%;margin-top:20px;border:0;border-radius:14px;background:linear-gradient(110deg,#d6baff,#a981ff);color:#17111f;font:700 1rem system-ui;cursor:pointer;text-decoration:none}.button.secondary{background:#ffffff12;color:#f7f5ff;border:1px solid #ffffff24}.label{color:#c6a9ff;text-transform:uppercase;letter-spacing:.14em;font-size:.75rem;font-weight:750}.muted{font-size:.9rem}.hidden{display:none}.links{display:flex;gap:18px;flex-wrap:wrap;margin-top:20px}.links a{color:#c6a9ff}
+  </style>
+</head>
+<body><main>
+  <div class="label">CineRecreate AI · Android install</div>
+  <h1>Put the app on your phone.</h1>
+  <p>Install CineRecreate as a home-screen web app. It opens like an app and keeps the interface available offline. This is the existing web app—not a native APK and not an offline AI video generator.</p>
+  <section class="card">
+    <strong id="status">Checking install options…</strong>
+    <button class="button hidden" id="install" type="button">Install CineRecreate</button>
+    <div id="manual" class="hidden">
+      <p>On Android, use your browser menu to install it:</p>
+      <ol><li>Tap the browser menu <strong>⋮</strong>.</li><li>Choose <strong>Install app</strong> or <strong>Add to Home screen</strong>.</li><li>Confirm the prompt.</li></ol>
+      <p class="muted">If you are viewing this inside another app, open the page in Chrome or Samsung Internet first.</p>
+    </div>
+    <p class="muted">AI video generation needs the separately configured online service. Installing the web app does not download an AI model or create an APK.</p>
+  </section>
+  <a class="button secondary" href="./video.html">Open CineRecreate</a>
+  <nav class="links"><a href="./studio.html">Story planner</a><a href="./device-lab.html">Device Lab</a></nav>
+</main>
+<script>
+let promptEvent;const install=document.getElementById('install'),status=document.getElementById('status'),manual=document.getElementById('manual');
+window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();promptEvent=event;install.classList.remove('hidden');manual.classList.add('hidden');status.textContent='Ready to install from this page.'});
+install.addEventListener('click',async()=>{if(!promptEvent)return;promptEvent.prompt();await promptEvent.userChoice;promptEvent=null;install.classList.add('hidden');status.textContent='If you accepted, CineRecreate is being installed.'});
+window.addEventListener('appinstalled',()=>{status.textContent='CineRecreate was installed.';install.classList.add('hidden')});
+if('serviceWorker'in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+setTimeout(()=>{if(!promptEvent){status.textContent='Use your browser menu to install';manual.classList.remove('hidden')}},1200);
+</script></body></html>
