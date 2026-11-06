@@ -1,19 +1,13 @@
 const CACHE_PREFIX = 'cinerecreate-shell-';
-const CACHE_NAME = `${CACHE_PREFIX}v2`;
-const APP_SHELL = [
-  './',
-  './index.html',
-  './manifest.json',
-  './icons/icon-192.svg',
-  './icons/icon-512.svg'
-];
+const CACHE_NAME = `${CACHE_PREFIX}v3`;
+const SHELL_PATHS = ['./', './index.html', './studio.html', './manifest.json', './icons/icon-192.svg', './icons/icon-512.svg'];
 const scopeUrl = new URL(self.registration.scope);
-const shellUrl = new URL('./index.html', scopeUrl).href;
+const shellUrl = new URL('./studio.html', scopeUrl).href;
 
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(APP_SHELL.map(path => new URL(path, scopeUrl).href)))
+      .then(cache => cache.addAll(SHELL_PATHS.map(path => new URL(path, scopeUrl).href)))
       .then(() => self.skipWaiting())
   );
 });
@@ -31,7 +25,6 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const request = event.request;
   if (request.method !== 'GET' || request.headers.has('authorization')) return;
-
   const url = new URL(request.url);
   if (url.origin !== scopeUrl.origin || !url.href.startsWith(scopeUrl.href)) return;
 
@@ -40,22 +33,22 @@ self.addEventListener('fetch', event => {
       try {
         return await fetch(request);
       } catch {
-        return (await caches.match(shellUrl)) || Response.error();
+        return (await caches.match(request, {ignoreSearch: true}))
+          || (await caches.match(shellUrl))
+          || Response.error();
       }
     })());
     return;
   }
 
-  // Cache the local app shell and static resources only; never cache API responses.
+  // Do not intercept API calls. Only app-owned static resources are cacheable.
   if (!['script', 'style', 'image', 'font', 'manifest'].includes(request.destination)) return;
   event.respondWith((async () => {
     const cached = await caches.match(request);
     if (cached) return cached;
-
     const response = await fetch(request);
     if (response.ok && response.type === 'basic') {
-      const copy = response.clone();
-      event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.put(request, copy)));
+      event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.put(request, response.clone())));
     }
     return response;
   })());

@@ -1,9 +1,9 @@
 {
-  "id": "./",
+  "id": "./studio.html",
   "name": "CineRecreate AI",
   "short_name": "CineRecreate",
-  "description": "Your cinematic recreation workspace.",
-  "start_url": "./",
+  "description": "Plan and develop your movie ideas with CineRecreate AI.",
+  "start_url": "./studio.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
@@ -11,17 +11,7 @@
   "theme_color": "#101018",
   "prefer_related_applications": false,
   "icons": [
-    {
-      "src": "./icons/icon-192.svg",
-      "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
-    {
-      "src": "./icons/icon-512.svg",
-      "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    }
+    { "src": "./icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "./icons/icon-512.svg", "sizes": "512x512", "type": "image/svg+xml", "purpose": "any" }
   ]
 }

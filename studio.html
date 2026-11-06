@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101018">
+  <meta name="description" content="Plan your next movie with CineRecreate AI's offline-ready story studio.">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Movie Studio · CineRecreate AI</title>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icons/icon-192.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icons/icon-192.svg">
+  <style>
+    :root{color-scheme:dark;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#101018;color:#f7f5ff;--muted:#aaa5b7;--line:#ffffff1a;--panel:#ffffff08;--accent:#b997ff;--green:#73e0ad}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 60% -10%,#30214d 0,#17151f 43%,#101018 80%)}button,input,textarea,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid #d6baff;outline-offset:2px}
+    .shell{max-width:1120px;margin:auto;padding:max(20px,env(safe-area-inset-top)) 22px max(28px,env(safe-area-inset-bottom))}.top{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:8px 0 28px}.brand{display:flex;align-items:center;gap:11px;font-weight:750;letter-spacing:-.03em}.brand img{width:40px;height:40px;border-radius:12px}.online{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.82rem}.lamp{width:8px;height:8px;border-radius:50%;background:var(--green)}.offline .lamp{background:#ffbb70}
+    .hero{margin:6px 0 27px}.eyebrow{color:#c6a9ff;text-transform:uppercase;letter-spacing:.15em;font-size:.72rem;font-weight:750}.hero h1{font-size:clamp(2rem,6vw,3.8rem);line-height:1.04;letter-spacing:-.055em;margin:10px 0}.hero p,.note{color:var(--muted);line-height:1.6}.hero p{margin:0;max-width:700px}.layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);gap:18px;align-items:start}.panel{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 16px 54px #0002}.panel h2{margin:0 0 18px;font-size:1.13rem;letter-spacing:-.02em}.field{display:grid;gap:8px;margin:15px 0}.field label{font-size:.84rem;font-weight:650;color:#e5e0ee}.field input,.field textarea,.field select{width:100%;border:1px solid #ffffff20;background:#0e0d14;color:#f7f5ff;border-radius:12px;padding:13px 14px;min-height:48px}.field textarea{min-height:120px;resize:vertical;line-height:1.5}.field select{appearance:auto}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.btn{min-height:46px;border:1px solid #ffffff20;border-radius:12px;padding:0 16px;color:#f7f5ff;background:#ffffff0d;font-weight:700}.btn.primary{border:0;color:#17111f;background:linear-gradient(110deg,#ddc6ff,#a981ff)}.btn:disabled{opacity:.55;cursor:not-allowed}.note{font-size:.8rem;margin:14px 0 0}.notice{border-left:3px solid #b997ff;padding:10px 12px;background:#b997ff0e;border-radius:0 10px 10px 0;color:#d4cfe0;font-size:.8rem;line-height:1.5;margin-top:15px}.project-list{display:grid;gap:9px}.project-empty{color:var(--muted);font-size:.88rem;line-height:1.5}.project-item{display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;width:100%;border:1px solid var(--line);background:#ffffff08;color:#f7f5ff;padding:13px;border-radius:12px}.project-item strong{display:block;font-size:.88rem}.project-item small{display:block;color:var(--muted);margin-top:4px}.outline{margin-top:18px}.outline-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}.outline-head h2{margin:0}.scene{border:1px solid var(--line);background:#ffffff06;border-radius:14px;padding:15px;margin-top:10px}.scene-top{display:flex;gap:12px;align-items:center}.scene-num{width:30px;height:30px;flex:none;border-radius:9px;display:grid;place-items:center;background:#b997ff20;color:#d3bcff;font-weight:750;font-size:.8rem}.scene h3{margin:0;font-size:.95rem}.scene p{margin:9px 0 0;color:#c3becd;font-size:.86rem;line-height:1.55}.scene .shot{color:#c9b2ff;font-size:.75rem;font-weight:700;margin-top:9px}.hidden{display:none!important}.footer{padding-top:22px;color:#858091;font-size:.76rem;line-height:1.5}.toast{position:fixed;left:50%;bottom:max(20px,env(safe-area-inset-bottom));transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#f5edff;color:#21182c;padding:12px 17px;border-radius:12px;font-size:.86rem;font-weight:700;transition:.2s;box-shadow:0 8px 30px #0007}.toast.show{opacity:1;transform:translate(-50%,0)}
+    @media(max-width:760px){.layout{grid-template-columns:1fr}.shell{padding-left:16px;padding-right:16px}.top{padding-bottom:22px}.panel{padding:18px}}@media(max-width:420px){.row{grid-template-columns:1fr}.actions .btn{flex:1 1 100%}.online{font-size:.73rem}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="top">
+      <div class="brand"><img src="./icons/icon-192.svg" alt=""><span>CineRecreate AI <span style="color:#a9a3b4;font-weight:550">/ Movie Studio</span></span></div>
+      <div class="online" id="network"><span class="lamp"></span><span id="network-label">Checking connection…</span></div>
+    </header>
+    <main>
+      <section class="hero"><div class="eyebrow">Your first film starts here</div><h1>Turn an idea into a movie plan.</h1><p>Write a premise, shape a short film outline, and save or export your draft. Your projects stay in this browser on this device.</p></section>
+      <div class="layout">
+        <section class="panel" aria-labelledby="create-heading">
+          <h2 id="create-heading">Start a movie</h2>
+          <form id="movie-form">
+            <div class="field"><label for="title">Movie title</label><input id="title" maxlength="80" placeholder="e.g. The Last Signal" required></div>
+            <div class="row">
+              <div class="field"><label for="genre">Genre</label><select id="genre"><option>Drama</option><option>Adventure</option><option>Science fiction</option><option>Thriller</option><option>Comedy</option><option>Fantasy</option><option>Horror</option><option>Romance</option></select></div>
+              <div class="field"><label for="length">Target length</label><select id="length"><option value="5">5-minute short</option><option value="10">10-minute short</option><option value="20">20-minute short</option><option value="90">Feature film</option></select></div>
+            </div>
+            <div class="field"><label for="idea">What's your movie about?</label><textarea id="idea" maxlength="1200" placeholder="Describe the main character, what they want, and what stands in their way…" required></textarea></div>
+            <div class="actions"><button class="btn primary" type="submit">Build my story outline</button><button class="btn" id="clear-form" type="button">Clear</button></div>
+          </form>
+          <div class="notice"><strong>About this first version:</strong> It creates a structured story outline on your device, including scene beats and suggested shots. It does not generate AI-written scripts or video clips yet; those require connecting a secure AI service.</div>
+          <p class="note">Drafts are saved locally in this browser. They are not uploaded or synced to another device.</p>
+        </section>
+        <aside class="panel" aria-labelledby="projects-heading"><h2 id="projects-heading">My movie projects</h2><div class="project-list" id="project-list"></div><div class="actions"><button class="btn" id="export-json" type="button" disabled>Export project</button><button class="btn" id="export-script" type="button" disabled>Export outline</button></div><p class="note">Export a backup to keep your work or continue editing it elsewhere.</p></aside>
+      </div>
+      <section class="panel outline hidden" id="outline-panel" aria-live="polite"><div class="outline-head"><h2 id="outline-title">Story outline</h2><button class="btn" id="delete-project" type="button">Delete</button></div><div id="outline-scenes"></div></section>
+    </main>
+    <footer class="footer">Offline-ready story planning. AI writing, image/video generation, and cloud sync are not connected in this version. Reconnect to use any future online AI features.</footer>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script>
+  (() => {
+    const KEY='cinerecreate-projects-v1'; let projects=readProjects(); let activeId=null; let toastTimer;
+    const $=id=>document.getElementById(id);
+    function readProjects(){try{const data=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(data)?data:[]}catch{return []}}
+    function persist(){try{localStorage.setItem(KEY,JSON.stringify(projects));return true}catch{say('Could not save: device storage may be full.');return false}}
+    function say(message){const t=$('toast');t.textContent=message;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2600)}
+    function slug(text){return (text||'movie').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'movie'}
+    function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+    function makeScenes(title,genre,idea,length){
+      const premise=idea.trim().replace(/[.!?]+$/,'');
+      const hero=title.trim()||'Our protagonist';
+      const beats=[
+        ['Opening image','Establish the world and the protagonist before everything changes.', 'Wide establishing shot'],
+        ['The disruption',`A discovery, arrival, or sudden problem makes the central idea impossible to ignore: ${premise}.`, 'Close-up on the detail that changes everything'],
+        ['First decision',`${hero} chooses a first step toward solving the problem, revealing what they value and what they fear.`, 'Medium shot; hold on the choice'],
+        ['Complications',`The situation gets harder. Let the ${genre.toLowerCase()} tone come through in a concrete obstacle and a character interaction.`, 'Tracking shot through the new obstacle'],
+        ['Turning point',`A new piece of information changes the plan. The protagonist must confront the real cost of getting what they want.`, 'Slow push-in as the realization lands'],
+        ['Climax',`${hero} makes the decisive choice that resolves the central conflict—or pays a meaningful price for it.`, 'Build from close-ups to a decisive wide shot'],
+        ['Final image','End on a memorable image that shows how the protagonist or their world has changed.', 'Quiet final frame; let the image breathe']
+      ];
+      const count=length<=5?5:length<=10?6:7;
+      return beats.slice(0,count).map((b,i)=>({number:i+1,title:b[0],description:b[1],shot:b[2]}));
+    }
+    function renderList(){
+      const host=$('project-list');
+      if(!projects.length){host.innerHTML='<div class="project-empty">No projects yet. Add your movie idea to create your first outline.</div>'}
+      else host.innerHTML=projects.slice().sort((a,b)=>b.updated-a.updated).map(p=>`<button class="project-item" type="button" data-id="${escapeHtml(p.id)}"><span><strong>${escapeHtml(p.title)}</strong><small>${escapeHtml(p.genre)} · ${p.scenes.length} scenes</small></span><span aria-hidden="true">›</span></button>`).join('');
+      host.querySelectorAll('[data-id]').forEach(button=>button.addEventListener('click',()=>showProject(button.dataset.id)));
+      const selected=projects.some(p=>p.id===activeId);$('export-json').disabled=!selected;$('export-script').disabled=!selected;$('delete-project').disabled=!selected;
+    }
+    function showProject(id){
+      const p=projects.find(x=>x.id===id); if(!p)return; activeId=id;
+      $('outline-title').textContent=p.title+' — Story outline';
+      $('outline-scenes').innerHTML=`<p class="note">${escapeHtml(p.genre)} · ${escapeHtml(p.lengthLabel)} · ${escapeHtml(p.idea)}</p>`+p.scenes.map(s=>`<article class="scene"><div class="scene-top"><span class="scene-num">${s.number}</span><h3>${escapeHtml(s.title)}</h3></div><p>${escapeHtml(s.description)}</p><div class="shot">SUGGESTED SHOT · ${escapeHtml(s.shot)}</div></article>`).join('');
+      $('outline-panel').classList.remove('hidden');renderList();$('outline-panel').scrollIntoView({behavior:'smooth',block:'start'});
+    }
+    $('movie-form').addEventListener('submit',event=>{
+      event.preventDefault();const title=$('title').value.trim(),idea=$('idea').value.trim();if(!title||!idea)return;
+      const length=Number($('length').value),lengthLabel=$('length').selectedOptions[0].textContent,genre=$('genre').value;
+      const project={id:(crypto.randomUUID?crypto.randomUUID():`${Date.now()}-${Math.random()}`),title,idea,genre,length,lengthLabel,scenes:makeScenes(title,genre,idea,length),created:Date.now(),updated:Date.now()};
+      projects.push(project);if(!persist()){projects.pop();return}renderList();showProject(project.id);say('Your story outline has been saved on this device.');
+    });
+    $('clear-form').addEventListener('click',()=>{$('movie-form').reset();$('title').focus()});
+    $('delete-project').addEventListener('click',()=>{if(!activeId)return;projects=projects.filter(p=>p.id!==activeId);activeId=null;persist();$('outline-panel').classList.add('hidden');renderList();say('Project deleted from this device.')});
+    function download(name,content,type){const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+    $('export-json').addEventListener('click',()=>{const p=projects.find(x=>x.id===activeId);if(p)download(`${slug(p.title)}.json`,JSON.stringify(p,null,2),'application/json')});
+    $('export-script').addEventListener('click',()=>{const p=projects.find(x=>x.id===activeId);if(!p)return;const text=[p.title.toUpperCase(),`${p.genre} · ${p.lengthLabel}`,'',`PREMISE\n${p.idea}`,'','STORY OUTLINE',...p.scenes.flatMap(s=>[``,`SCENE ${s.number}: ${s.title.toUpperCase()}`,s.description,`Suggested shot: ${s.shot}`])].join('\n');download(`${slug(p.title)}-outline.txt`,text,'text/plain;charset=utf-8')});
+    function network(){const online=navigator.onLine;$('network').classList.toggle('offline',!online);$('network-label').textContent=online?'Online · drafts stay on this device':'Offline · local story tools available'}window.addEventListener('online',network);window.addEventListener('offline',network);network();renderList();
+  })();
+  </script>
+  <script>if('serviceWorker' in navigator&&location.protocol!=='file:'){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(error=>console.warn('Service worker registration failed',error)));}</script>
+</body>
+</html>
