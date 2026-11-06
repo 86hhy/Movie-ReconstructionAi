@@ -1,30 +1,36 @@
 # CineRecreate AI
 
-CineRecreate AI is a mobile-friendly Progressive Web App with an offline-ready movie story-planning studio.
+CineRecreate AI is a mobile-friendly PWA with a local story planner and an AI video-scene generator integration for Replicate. The static website runs on GitHub Pages; video generation requires deploying the included serverless API and configuring a Replicate account/token.
 
-## Publish on GitHub Pages
+## GitHub Pages deployment
 
-1. Open **Settings → Pages**.
-2. Select **Deploy from a branch**, choose `main` and `/ (root)`, then save (or use a Pages workflow).
-3. Wait until the HTTPS Pages site is published.
-4. Open `https://86hhy.github.io/Movie-ReconstructionAi/` in Chrome or Samsung Internet. The project root remains available as the PWA introduction; the installed app launches the Movie Studio page.
+1. Open **Settings → Pages** and publish `main` from `/ (root)` (or use an existing Pages workflow).
+2. Wait for the HTTPS site to publish.
+3. Open `https://86hhy.github.io/Movie-ReconstructionAi/`. The installed app starts in the AI Video Studio; the story planner is linked from the top navigation.
 
-All application paths are relative to the service worker scope, which supports the repository's GitHub Pages project subpath.
+## Enable Replicate video generation (required)
 
-## Make a first movie plan
+The GitHub Pages site cannot execute backend code or keep a Replicate token secret. The included `api/` functions are intended for a separate Vercel deployment from this repository.
 
-Open the published site and choose the **Movie Studio** start page (or go to `https://86hhy.github.io/Movie-ReconstructionAi/studio.html`). Enter a title, genre, length, and premise, then tap **Build my story outline**. CineRecreate creates a scene-beat outline with suggested shots and saves it in this browser's local storage. Select a saved project to review it, export a JSON backup, or download a plain-text outline.
+1. Create/sign in to a Replicate account and check the selected model's access, input schema, and pricing on its Replicate model page. Replicate generation can incur charges.
+2. Import this repository into Vercel and deploy it. Vercel serves the static files and the included `/api/generate` and `/api/predictions` serverless functions. You can keep GitHub Pages as the public website if preferred; the functions must be deployed to Vercel.
+3. In the Vercel project's **Settings → Environment Variables**, set:
+   - `REPLICATE_API_TOKEN` = your Replicate token (server secret; never add it to HTML, JavaScript, GitHub, or this chat).
+   - `REPLICATE_MODEL` = the Replicate model slug `owner/model` to use. It defaults to `google/veo-3`; confirm the model is currently available to your account and its input accepts a `prompt` string. Change this value if you choose another compatible text-to-video model.
+   - `CORS_ALLOWED_ORIGIN` = `https://86hhy.github.io` when using this GitHub Pages address.
+4. Redeploy after adding/changing environment variables. Open the published app's **AI Video Studio**, enter the Vercel deployment origin (for example `https://your-project.vercel.app`) in **Replicate API server URL**, and save it on that device.
+5. Enter a shot prompt and tap **Generate video**. The app submits a job, checks its status, and displays the returned video when ready.
 
-This is a working local story-planning MVP, not an AI model: it does not yet write original AI scripts, create images/video, or sync projects to the cloud. Those capabilities need a backend and a configured AI provider. Do not put secret provider API keys in client-side HTML or JavaScript.
+The frontend never receives the Replicate token. The included API restricts browser CORS to the configured site origin, but CORS alone is **not** authentication or abuse prevention: before sharing a public generator, add real user authentication, quotas/rate limits, and cost monitoring to the backend. Do not publish a public paid endpoint without those controls.
 
-## Install on a Samsung Android phone
+## Create a movie plan
 
-1. Open the published HTTPS address in Chrome or Samsung Internet.
-2. In Chrome, tap **⋮ → Install app** (or **Add to Home screen**). In Samsung Internet use **☰ → Add page to → Home screen** or **Install app**, depending on version.
-3. Confirm installation. The app icon opens the standalone Movie Studio page. If you already installed it before this update, uninstall the old shortcut/app and reinstall after GitHub Pages finishes publishing the new version.
+The **Story planner** creates a structured scene outline locally and supports project export. Projects are stored in that browser on that device. The video generator currently makes individual clips, not a fully edited feature film; editing, sound design, and assembling generated clips are future work.
 
-The browser controls the exact install option labels. GitHub Pages serves over HTTPS; service-worker install/offline behavior requires HTTPS and the app to be opened online once so its app shell can be cached.
+## Samsung Android installation
 
-## Offline behavior
+Open the published HTTPS site in Chrome or Samsung Internet, use the browser menu's **Install app** / **Add to Home screen**, and confirm. If an older CineRecreate icon is already installed, remove it and reinstall after the Pages deployment finishes so the icon uses the new video-studio start page. Open the app online at least once to cache its interface. The UI can open offline, but Replicate generation and fetching results need internet.
 
-The service worker caches the local app shell, including `studio.html`, and falls back to the cached studio page when a navigation fails offline. Projects are stored locally on the device. AI provider features, once added, will require internet unless separately designed to run on-device.
+## API behavior and local development notes
+
+`POST /api/generate` submits the prompt to Replicate using the server-only token; `GET /api/predictions?id=...` retrieves prediction status/output. The API relays provider errors to the interface and never caches predictions. The model's input/output schema and availability may change; verify against the model page. Static GitHub Pages cannot host these API routes, so a deployed Vercel backend and its environment secrets are required for live generation.

@@ -1,9 +1,9 @@
 {
-  "id": "./studio.html",
+  "id": "./video.html",
   "name": "CineRecreate AI",
   "short_name": "CineRecreate",
-  "description": "Plan and develop your movie ideas with CineRecreate AI.",
-  "start_url": "./studio.html",
+  "description": "Create AI video scenes with CineRecreate AI.",
+  "start_url": "./video.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",

@@ -1,8 +1,9 @@
 const CACHE_PREFIX = 'cinerecreate-shell-';
-const CACHE_NAME = `${CACHE_PREFIX}v3`;
-const SHELL_PATHS = ['./', './index.html', './studio.html', './manifest.json', './icons/icon-192.svg', './icons/icon-512.svg'];
+const CACHE_NAME = `${CACHE_PREFIX}v5`;
+const SHELL_PATHS = ['./', './index.html', './studio.html', './video.html', './manifest.json', './icons/icon-192.svg', './icons/icon-512.svg'];
 const scopeUrl = new URL(self.registration.scope);
-const shellUrl = new URL('./studio.html', scopeUrl).href;
+const rootUrl = new URL('./', scopeUrl);
+const shellUrl = new URL('./video.html', scopeUrl).href;
 
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -30,10 +31,13 @@ self.addEventListener('fetch', event => {
 
   if (request.mode === 'navigate') {
     event.respondWith((async () => {
-      try {
-        return await fetch(request);
-      } catch {
-        return (await caches.match(request, {ignoreSearch: true}))
+      if (url.pathname === rootUrl.pathname) {
+        try { return await fetch(shellUrl); }
+        catch { return (await caches.match(shellUrl)) || Response.error(); }
+      }
+      try { return await fetch(request); }
+      catch {
+        return (await caches.match(request, { ignoreSearch: true }))
           || (await caches.match(shellUrl))
           || Response.error();
       }
@@ -41,7 +45,7 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Do not intercept API calls. Only app-owned static resources are cacheable.
+  // API requests to a separately deployed host are never intercepted or cached.
   if (!['script', 'style', 'image', 'font', 'manifest'].includes(request.destination)) return;
   event.respondWith((async () => {
     const cached = await caches.match(request);
